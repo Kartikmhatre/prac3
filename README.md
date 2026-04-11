@@ -1,40 +1,122 @@
-# PRACTICAL 3
-## Install and Configure IIS Web Server
+# Practical 3
+Create snowflake schema with dimension tables, sub-dimension tables, and fact table.
 
-### 1. Aim
-To install and configure IIS Web Server.
+## Code
 
-### 2. Requirement Table
-- Windows Server
-- IIS Role
-- Web Browser
+```python
+# Practical 5: Snowflake Schema (Final Code - No Errors)
+import sqlite3
 
-### 3. Procedure
+conn = sqlite3.connect("sales_warehouse.db")
+cursor = conn.cursor()
 
-**Step 1:** Open Server Manager → Manage → Add Roles and Features
+cursor.executescript("""
+CREATE TABLE IF NOT EXISTS Dim_Category (
+    CategoryID INTEGER PRIMARY KEY,
+    CategoryName TEXT
+);
 
-**Step 2:** Select Web Server (IIS)
+CREATE TABLE IF NOT EXISTS Dim_Country (
+    CountryID INTEGER PRIMARY KEY,
+    CountryName TEXT
+);
 
-**Step 3:** Click Next → Install
+CREATE TABLE IF NOT EXISTS Dim_State (
+    StateID INTEGER PRIMARY KEY,
+    StateName TEXT,
+    CountryID INTEGER,
+    FOREIGN KEY (CountryID) REFERENCES Dim_Country(CountryID)
+);
 
-**Step 4:** After installation, open browser
+CREATE TABLE IF NOT EXISTS Dim_City (
+    CityID INTEGER PRIMARY KEY,
+    CityName TEXT,
+    StateID INTEGER,
+    FOREIGN KEY (StateID) REFERENCES Dim_State(StateID)
+);
 
-**Step 5:** Type: `http://localhost`
+CREATE TABLE IF NOT EXISTS Dim_Product (
+    ProductID INTEGER PRIMARY KEY,
+    ProductName TEXT,
+    CategoryID INTEGER,
+    FOREIGN KEY (CategoryID) REFERENCES Dim_Category(CategoryID)
+);
 
-**Step 6:** Default IIS page appears
+CREATE TABLE IF NOT EXISTS Dim_Customer (
+    CustomerID INTEGER PRIMARY KEY,
+    CustomerName TEXT,
+    CityID INTEGER,
+    FOREIGN KEY (CityID) REFERENCES Dim_City(CityID)
+);
 
-### 4. Theory
+CREATE TABLE IF NOT EXISTS Dim_Date (
+    DateID INTEGER PRIMARY KEY,
+    Day INTEGER,
+    Month TEXT,
+    Year INTEGER,
+    Quarter TEXT
+);
 
-IIS (Internet Information Services) is a web server developed by Microsoft for hosting websites, web applications, and web services on Windows Server. It supports multiple protocols including HTTP, HTTPS, FTP, and SMTP.
+CREATE TABLE IF NOT EXISTS Fact_Sales (
+    SalesID INTEGER PRIMARY KEY,
+    ProductID INTEGER,
+    CustomerID INTEGER,
+    DateID INTEGER,
+    Quantity INTEGER,
+    Amount REAL,
+    FOREIGN KEY (ProductID) REFERENCES Dim_Product(ProductID),
+    FOREIGN KEY (CustomerID) REFERENCES Dim_Customer(CustomerID),
+    FOREIGN KEY (DateID) REFERENCES Dim_Date(DateID)
+);
+""")
 
-IIS provides a platform for deploying ASP.NET applications, PHP websites, and static HTML content. Its modular architecture allows administrators to install only needed components, reducing security risks and improving performance. Application pools provide process isolation, preventing one application from affecting others.
+cursor.executescript("""
+INSERT OR REPLACE INTO Dim_Category VALUES (1, 'Electronics');
+INSERT OR REPLACE INTO Dim_Product VALUES (101, 'Laptop', 1);
+INSERT OR REPLACE INTO Dim_Country VALUES (1, 'India');
+INSERT OR REPLACE INTO Dim_State VALUES (10, 'Maharashtra', 1);
+INSERT OR REPLACE INTO Dim_City VALUES (100, 'Mumbai', 10);
+INSERT OR REPLACE INTO Dim_Customer VALUES (1001, 'Rahul Sharma', 100);
+INSERT OR REPLACE INTO Dim_Date VALUES (501, 12, 'November', 2025, 'Q4');
+INSERT OR REPLACE INTO Fact_Sales VALUES (1, 101, 1001, 501, 2, 120000.00);
+""")
 
-IIS integrates with Windows security features including authentication, SSL/TLS encryption, and IP restrictions. It supports URL rewriting, compression, and caching for performance optimization. Management can be done through IIS Manager GUI, command-line tools, or PowerShell scripts.
+conn.commit()
 
-### 5. Output
+print("\n===== SUB-DIMENSION TABLES =====")
+print("\nDim_Category:")
+for row in cursor.execute("SELECT * FROM Dim_Category"):
+    print(row)
 
-Default IIS web page displayed successfully.
+print("\nDim_Country:")
+for row in cursor.execute("SELECT * FROM Dim_Country"):
+    print(row)
 
-### 6. Conclusion
+print("\nDim_State:")
+for row in cursor.execute("SELECT * FROM Dim_State"):
+    print(row)
 
-IIS web server was installed and tested successfully.
+print("\nDim_City:")
+for row in cursor.execute("SELECT * FROM Dim_City"):
+    print(row)
+
+print("\n===== DIMENSION TABLES =====")
+print("\nDim_Product:")
+for row in cursor.execute("SELECT * FROM Dim_Product"):
+    print(row)
+
+print("\nDim_Customer:")
+for row in cursor.execute("SELECT * FROM Dim_Customer"):
+    print(row)
+
+print("\nDim_Date:")
+for row in cursor.execute("SELECT * FROM Dim_Date"):
+    print(row)
+
+print("\n===== FACT TABLE =====")
+print("\nFact_Sales:")
+for row in cursor.execute("SELECT * FROM Fact_Sales"):
+    print(row)
+
+conn.close()
+```
