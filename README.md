@@ -1,7 +1,6 @@
 ## Code
 
 ```python
-# Practical 5: Snowflake Schema
 import sqlite3
 
 conn = sqlite3.connect("sales_warehouse.db")
