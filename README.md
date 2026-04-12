@@ -1,3 +1,12 @@
+# Practical 3: Snowflake Schema Implementation in Python
+
+## Aim
+Create snowflake schema using fact table, dimension tables and sub-dimension table.
+
+## Requirements
+- Python 3.x
+- sqlite3 library
+
 ## Code
 
 ```python
@@ -30,25 +39,30 @@ INSERT OR REPLACE INTO Fact_Sales VALUES (1, 101, 1001, 2, 120000.00);
 
 conn.commit()
 
-print("\n=== Dim_Category ===")
+print("\n===== DIMENSION TABLES =====")
+print("\nDim_Category:")
 for row in cursor.execute("SELECT * FROM Dim_Category"):
     print(row)
 
-print("\n=== Dim_State ===")
+print("\nDim_State:")
 for row in cursor.execute("SELECT * FROM Dim_State"):
     print(row)
 
-print("\n=== Dim_Product ===")
+print("\nDim_Product:")
 for row in cursor.execute("SELECT * FROM Dim_Product"):
     print(row)
 
-print("\n=== Dim_Customer ===")
+print("\nDim_Customer:")
 for row in cursor.execute("SELECT * FROM Dim_Customer"):
     print(row)
 
-print("\n=== Fact_Sales ===")
+print("\n===== FACT TABLE =====")
+print("\nFact_Sales:")
 for row in cursor.execute("SELECT * FROM Fact_Sales"):
     print(row)
 
 conn.close()
 ```
+
+## Conclusion
+Successfully implemented a snowflake schema with dimension tables (Dim_Product, Dim_Customer), sub-dimension tables (Dim_Category, Dim_State), and fact table (Fact_Sales) with proper normalization and foreign key relationships.
