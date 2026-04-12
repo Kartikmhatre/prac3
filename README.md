@@ -39,7 +39,7 @@ INSERT OR REPLACE INTO Fact_Sales VALUES (1, 101, 1001, 2, 120000.00);
 
 conn.commit()
 
-print("\n===== DIMENSION TABLES =====")
+print("\n===== SUB-DIMENSION TABLES =====")
 print("\nDim_Category:")
 for row in cursor.execute("SELECT * FROM Dim_Category"):
     print(row)
@@ -48,6 +48,7 @@ print("\nDim_State:")
 for row in cursor.execute("SELECT * FROM Dim_State"):
     print(row)
 
+print("\n===== DIMENSION TABLES =====")
 print("\nDim_Product:")
 for row in cursor.execute("SELECT * FROM Dim_Product"):
     print(row)
