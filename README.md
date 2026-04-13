@@ -1,3 +1,5 @@
+
+https://g.co/gemini/share/2944a9cf4e32
 # Practical 3: Snowflake Schema Implementation in Python
 
 ## Aim
