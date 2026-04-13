@@ -1,4 +1,4 @@
-
+https://chatgpt.com/share/69dc5530-bbb8-8320-a2b7-ef4235f2c80e
 https://g.co/gemini/share/2944a9cf4e32
 # Practical 3: Snowflake Schema Implementation in Python
 
